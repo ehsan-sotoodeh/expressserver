@@ -1,0 +1,26 @@
+{
+  "name": "expressserver",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon ./index.js --exec babel-node -e js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ehsan99999/expressserver.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ehsan99999/expressserver/issues"
+  },
+  "homepage": "https://github.com/ehsan99999/expressserver#readme",
+  "devDependencies": {
+    "mysql": "^2.17.1"
+  },
+  "dependencies": {
+    "body-parser": "^1.19.0"
+  }
+}
