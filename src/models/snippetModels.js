@@ -33,7 +33,7 @@ class SnippetModel {
         return new Promise((resolve,reject) =>{
             pool.query("delete from snippets where id=?" ,parseInt(id), (error,results)=>{
                 if(error){
-                    return reject(error);
+                    return reject(error); 
                 }
                 return resolve(results[0])
             });
