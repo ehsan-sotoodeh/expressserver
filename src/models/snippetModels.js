@@ -24,7 +24,31 @@ class SnippetModel {
                 if(error){
                     return reject(error);
                 }
-                return resolve(results[0])
+                if(results.length > 0)
+                    return resolve(results[0]);
+                else 
+                    return reject(404);
+            });
+        });
+    };
+
+    async getBySearchTerm(searchTerm,columnName="keywords"){
+        let searchTermArray = searchTerm.split(',');
+        let query = "select * from snippets where ";
+        let queryValues = [];
+        let wheres = ""
+        searchTermArray.map((term,index) =>{
+            queryValues.push(`%${term}%`);
+            let andOr = (index > 0)? " Or " : "";
+            wheres += `${andOr} ${columnName} LIKE ? `;
+        });
+
+        return new Promise((resolve,reject) =>{
+            let q = pool.query(query+wheres ,queryValues , (error,results)=>{
+                if(error){
+                    return reject(error);
+                }
+                return resolve(results)
             });
         });
     };
@@ -35,7 +59,7 @@ class SnippetModel {
                 if(error){
                     return reject(error); 
                 }
-                return resolve(results[0])
+                return resolve(results)
             });
         });
     };

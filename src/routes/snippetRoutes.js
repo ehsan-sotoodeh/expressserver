@@ -3,7 +3,8 @@ import {
     save,
     update,
     getOneById,
-    deleteOneById
+    deleteOneById,
+    getBySearchTerm
 } from '../controllers/snippetControllers'
 const routes = (app)=>{
     app.route('/snippet')
@@ -14,7 +15,7 @@ const routes = (app)=>{
     },getAll)
 
     .post(save)
-    .put(update)
+    .put(update);
 
 
     app.route('/snippet/:snippetId')
@@ -25,6 +26,11 @@ const routes = (app)=>{
     })
 
     .delete(deleteOneById);
+
+
+    app.route('/snippet/search/:searchTerm')
+    .get(getBySearchTerm);
+
 
 
 }

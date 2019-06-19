@@ -19,6 +19,26 @@ export const getOneById = async (req,res) =>{
 
     }catch(error){
         console.log(error);
+        if(error === 404){
+            res.sendStatus(404);
+        }
+        
+        res.sendStatus(500);
+
+    }
+}
+
+export const getBySearchTerm = async (req,res) =>{
+    try{
+        let snippetsByKeyword = await SnippetModel.getBySearchTerm(req.params.searchTerm,'keywords');
+        let snippetsByTitle = await SnippetModel.getBySearchTerm(req.params.searchTerm,'title');
+        let snippetsByContent = await SnippetModel.getBySearchTerm(req.params.searchTerm,'content');
+        let snippets = [...snippetsByKeyword,...snippetsByTitle,...snippetsByContent];
+        let uniqueSnippets = getUniqueByKey(snippets,'id');
+        res.json(uniqueSnippets);
+
+    }catch(error){
+        console.log(error);
         res.sendStatus(500);
 
     }
@@ -53,4 +73,18 @@ export const update = async (req,res) =>{
         console.log(error);
         res.sendStatus(500);
     }
+}
+
+function getUniqueByKey(inputSnippets,key){
+    //based on the key remove the duplications 
+    let resultsSnippets = [];
+    let snippetsInArray = [];
+    inputSnippets.map(snippet =>{
+        if(snippetsInArray.indexOf(snippet[key]) === -1){
+            //if not in array then add it to results array
+            resultsSnippets.push(snippet);
+            snippetsInArray.push(snippet[key]);
+        }
+    });
+   return resultsSnippets
 }
