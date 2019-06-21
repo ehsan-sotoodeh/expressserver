@@ -59,7 +59,7 @@ class SnippetModel {
                 if(error){
                     return reject(error); 
                 }
-                return resolve(results)
+                return resolve(id)
             });
         });
     };
