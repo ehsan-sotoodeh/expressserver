@@ -21,9 +21,7 @@ const routes = (app)=>{
     app.route('/snippet/:snippetId')
     .get(getOneById)
 
-    .put((req,res)=>{
-        res.send('put request successful!!!');
-    })
+    .put(update)
 
     .delete(deleteOneById);
 

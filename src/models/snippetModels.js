@@ -77,13 +77,14 @@ class SnippetModel {
     };
 
     async update(params){
-        console.log(params)
         return new Promise((resolve,reject)=>{
             pool.query("UPDATE `snippets` SET `title`=?, `keywords`=? ,`content`=? WHERE `id`=?;",[params.title,params.keywords,params.content,parseInt(params.id)],(error,results)=>{
                 if(error){
                     return reject(error);
                 }
-                return resolve(results);
+                
+                let updatedSnippet = this.getOneById(parseInt(params.id));
+                return resolve(updatedSnippet);
             });
         });
     };
