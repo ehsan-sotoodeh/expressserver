@@ -1,10 +1,10 @@
 import { resolve } from 'path';
 import { rejects } from 'assert';
+require('dotenv').config()
 
 const mysql = require('mysql');
 class SnippetModel {
     constructor(){
-
     }
 
     async getAll(){
@@ -95,11 +95,11 @@ class SnippetModel {
 
 const pool = mysql.createPool({
     connectionLimit : 10,
-    password : 'qzN83XxqXuT%',
-    user : "snippetsAdmin",
-    database : "snippetsDb",
-    host : "localhost",
-    port : "3306"
+    password : process.env.DB_PASSWORD,
+    user : process.env.DB_USER,
+    database : process.env.DB_NAME,
+    host : process.env.DB_HOST,
+    port : process.env.DB_PORT
 });
 
 const _SnippetModel = new SnippetModel();

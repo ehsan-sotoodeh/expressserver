@@ -7,7 +7,7 @@ import {
     getBySearchTerm
 } from '../controllers/snippetControllers'
 const routes = (app)=>{
-    app.route('/snippet')
+    app.route('/snippets')
     .get((req,res,next)=>{
         console.log(`request from ${req.originalUrl}`);
         console.log(`request from ${req.method}`);
@@ -26,9 +26,12 @@ const routes = (app)=>{
     .delete(deleteOneById);
 
 
-    app.route('/snippet/search/:searchTerm')
+    app.route('/snippets/search/:searchTerm')
     .get(getBySearchTerm);
 
+    app.route('/snippets/search/')
+    .get(getAll);
+ 
 
 
 }

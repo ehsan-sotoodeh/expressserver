@@ -6,19 +6,20 @@ export const getAll = async (req,res) =>{
         res.json(snippets);
 
     }catch(error){
-        console.log(error);
+        console.error(error);
         res.sendStatus(500);
 
     }
 }
 
 export const getOneById = async (req,res) =>{
+
     try{
         let snippets = await SnippetModel.getOneById(req.params.snippetId);
         res.json(snippets);
 
     }catch(error){
-        console.log(error);
+        console.error(error);
         if(error === 404){
             res.sendStatus(404);
         }
@@ -29,6 +30,8 @@ export const getOneById = async (req,res) =>{
 }
 
 export const getBySearchTerm = async (req,res) =>{
+ 
+
     try{
         let snippetsByKeyword = await SnippetModel.getBySearchTerm(req.params.searchTerm,'keywords');
         let snippetsByTitle = await SnippetModel.getBySearchTerm(req.params.searchTerm,'title');
@@ -38,39 +41,41 @@ export const getBySearchTerm = async (req,res) =>{
         res.json(uniqueSnippets);
 
     }catch(error){
-        console.log(error);
         res.sendStatus(500);
 
     }
 }
 
 export const deleteOneById = async (req,res) =>{
+
     try{
         let snippets = await SnippetModel.deleteOneById(req.params.snippetId);
         res.json(snippets);
 
     }catch(error){
-        console.log(error);
+        console.error(error);
         res.sendStatus(500);
 
     }
 }
 
 export const save = async (req,res) =>{
+
     try{
        let result = await SnippetModel.save(req.query);
        res.json(result);
     }catch(error){
-        console.log(error);
+        console.error(error);
         res.sendStatus(500);
     }
 }
 export const update = async (req,res) =>{
+
     try{
        let result = await SnippetModel.update(req.query);
        res.json(result);
     }catch(error){
-        console.log(error);
+        console.error(error);
         res.sendStatus(500);
     }
 }
