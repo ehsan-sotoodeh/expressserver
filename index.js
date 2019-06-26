@@ -1,10 +1,18 @@
 import express from 'express'
-import routes from './src/routes/snippetRoutes'
+import passport from 'passport'
 import bodyParser from 'body-parser';
-const cors = require('cors');
+import authRoutes  from './src/routes/authRoutes'
+const snippetRoutes = require('./src/routes/snippetRoutes')
+import { authenticate } from './src/controllers/userControllers'
 
+
+const cors = require('cors');
 const app = express();
 const PORT = 3000;
+
+app.use(passport.initialize());
+app.use(passport.session())
+
 
 // bodyparser setup
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -12,7 +20,16 @@ app.use(bodyParser.json());
 app.use(cors());
 
 
-routes(app);
+// set up routes
+app.use('/snippets', snippetRoutes);
+app.use('/auth', authRoutes);
+app.get('/test', (req,res)=>{
+    authenticate(res,req.query['token']);
+    res.send("000")
+});
+
+
+
 
 app.get('/',(req,res)=>{
     res.send(`Node and Express server is running on port ${PORT}`);
@@ -21,3 +38,13 @@ app.get('/',(req,res)=>{
 app.listen(PORT,()=>{
     console.log(`Your server is running on port ${PORT}`);
 });
+
+const HomePageRoute = express();
+
+HomePageRoute.get('/',(req,res)=>{
+    res.send(`<h1>Hello World</h1>`);
+});
+HomePageRoute.listen(80,(req,res)=>{
+    console.log(`Hello World...`);
+});
+
