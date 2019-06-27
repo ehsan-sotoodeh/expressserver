@@ -23,9 +23,9 @@ app.use(cors());
 // set up routes
 app.use('/snippets', snippetRoutes);
 app.use('/auth', authRoutes);
-app.get('/test', (req,res)=>{
-    authenticate(res,req.query['token']);
-    res.send("000")
+app.get('/test', async (req,res)=>{
+    let user  = await authenticate(res,req.query['token']);
+    res.send(user)
 });
 
 
@@ -45,6 +45,6 @@ HomePageRoute.get('/',(req,res)=>{
     res.send(`<h1>Hello World</h1>`);
 });
 HomePageRoute.listen(80,(req,res)=>{
-    console.log(`Hello World...`);
+    console.log(`Hello World`);
 });
 

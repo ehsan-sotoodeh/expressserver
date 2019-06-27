@@ -10,14 +10,27 @@ dotenv.config();
 //auth login
 const router = Router();
 
-router.get('/login',(req,res)=>{
-    console.log('auth/login')
-    res.send("login");
-});
+// router.get('/login',(req,res)=>{
+//     console.log('auth/login')
+//     res.send("login");
+// });
 
 passport.serializeUser((user,done)=>{
     done(null,user.id);
 });
+
+passport.deserializeUser((id,done)=>{
+    //get user from db by id
+    usersArray.map(user=>{
+        console.log(user)
+        if(user.id === id){
+            done(null,user);
+        }
+    })
+    
+});
+
+
 passport.use(
     new GoogleStrategy({
     // option for strategy
@@ -74,9 +87,6 @@ router.get('/google',passport.authenticate('google',{
 
 
 router.get('/google/redirect',passport.authenticate('google'),(req,res)=>{
-    console.log(req.user)
-
-
     res.redirect('/')
 });
 
