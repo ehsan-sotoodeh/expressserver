@@ -9,8 +9,9 @@ class SnippetModel {
 
     async getAll(){
         return new Promise((resolve,reject) =>{
-            pool.query("select * from snippets" , (error,results)=>{
+            pool.query("select * from snippets where deleted_at IS NULL " ,(error,results)=>{
                 if(error){
+                    console.log(error)
                     return reject(error);
                 }
                 return resolve(results)
@@ -20,7 +21,7 @@ class SnippetModel {
 
     async getOneById(id){
         return new Promise((resolve,reject) =>{
-            pool.query("select * from snippets where id=?" ,parseInt(id), (error,results)=>{
+            pool.query("select * from snippets where id=? and deleted_at IS NULL " ,parseInt(id), (error,results)=>{
                 if(error){
                     return reject(error);
                 }
@@ -28,13 +29,13 @@ class SnippetModel {
                     return resolve(results[0]);
                 else 
                     return reject(404);
-            });
+            }); 
         });
     };
 
     async getBySearchTerm(searchTerm,columnName="keywords"){
         let searchTermArray = searchTerm.split(',');
-        let query = "select * from snippets where ";
+        let query = "select * from snippets where deleted_at IS NULL AND ";
         let queryValues = [];
         let wheres = ""
         searchTermArray.map((term,index) =>{
@@ -42,7 +43,7 @@ class SnippetModel {
             let andOr = (index > 0)? " Or " : "";
             wheres += `${andOr} ${columnName} LIKE ? `;
         });
-
+        console.log(query+wheres)
         return new Promise((resolve,reject) =>{
             let q = pool.query(query+wheres ,queryValues , (error,results)=>{
                 if(error){
@@ -55,7 +56,8 @@ class SnippetModel {
 
     async deleteOneById(id){
         return new Promise((resolve,reject) =>{
-            pool.query("delete from snippets where id=?" ,parseInt(id), (error,results)=>{
+            
+            pool.query("UPDATE snippets SET deleted_at=? WHERE id = ?" ,[new Date(), parseInt(id)], (error,results)=>{
                 if(error){
                     return reject(error); 
                 }
@@ -66,12 +68,21 @@ class SnippetModel {
 
 
     async save(params){
+        //TODO replace userId and private with real data
+       params.userId = 1;
+       params.private = false;  
         return new Promise((resolve,reject)=>{
-            pool.query("INSERT INTO `snippets`  VALUES (?,?, ?, ? );",[null,params.title,params.keywords,params.content],(error,results)=>{
+            pool.query("INSERT INTO `snippets`  VALUES (?,?,?,?,?,?,?,?);"
+                ,[null,params.title,params.keywords,params.content,params.userId,params.private,null,null],(error,results)=>{
                 if(error){
                     return reject(error);
                 }
-                return resolve(results);
+                try {
+                    const addedSnippet = this.getOneById(results.insertId);
+                    return resolve(addedSnippet);
+                } catch (error) {
+                    throw error;
+                }
             });
         });
     };

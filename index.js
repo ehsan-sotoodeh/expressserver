@@ -4,11 +4,12 @@ import bodyParser from 'body-parser';
 import authRoutes  from './src/routes/authRoutes'
 const snippetRoutes = require('./src/routes/snippetRoutes')
 import { authenticate } from './src/controllers/userControllers'
+require('dotenv').config()
 
 
 const cors = require('cors');
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT_NUMBER;
 
 app.use(passport.initialize());
 app.use(passport.session())
@@ -44,7 +45,7 @@ const HomePageRoute = express();
 HomePageRoute.get('/',(req,res)=>{
     res.send(`<h1>Hello World</h1>`);
 });
-HomePageRoute.listen(80,(req,res)=>{
-    console.log(`Hello World`);
-});
+// HomePageRoute.listen(80,(req,res)=>{
+//     console.log(`Hello World`);
+// });
 

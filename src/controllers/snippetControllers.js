@@ -6,7 +6,6 @@ export const getAll = async (req,res) =>{
         res.json(snippets);
 
     }catch(error){
-        console.error(error);
         res.sendStatus(500);
 
     }
@@ -30,12 +29,10 @@ export const getOneById = async (req,res) =>{
 }
 
 export const getBySearchTerm = async (req,res) =>{
- 
-
     try{
-        let snippetsByKeyword = await SnippetModel.getBySearchTerm(req.params.searchTerm,'keywords');
-        let snippetsByTitle = await SnippetModel.getBySearchTerm(req.params.searchTerm,'title');
-        let snippetsByContent = await SnippetModel.getBySearchTerm(req.params.searchTerm,'content');
+        let snippetsByKeyword = await SnippetModel.getBySearchTerm(req.params.search,'keywords');
+        let snippetsByTitle = await SnippetModel.getBySearchTerm(req.params.search,'title');
+        let snippetsByContent = await SnippetModel.getBySearchTerm(req.params.search,'content');
         let snippets = [...snippetsByKeyword,...snippetsByTitle,...snippetsByContent];
         let uniqueSnippets = getUniqueByKey(snippets,'id');
         res.json(uniqueSnippets);
@@ -47,7 +44,7 @@ export const getBySearchTerm = async (req,res) =>{
 }
 
 export const deleteOneById = async (req,res) =>{
-
+    
     try{
         let snippets = await SnippetModel.deleteOneById(req.params.snippetId);
         res.json(snippets);
@@ -60,7 +57,7 @@ export const deleteOneById = async (req,res) =>{
 }
 
 export const save = async (req,res) =>{
-
+    console.log("here...")
     try{
        let result = await SnippetModel.save(req.query);
        res.json(result);

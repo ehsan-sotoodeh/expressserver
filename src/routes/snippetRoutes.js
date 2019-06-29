@@ -12,16 +12,31 @@ const router = Router();
 
 
 router.get('/',getAll)
-        .post(save);
+        .post('/',(req,res,next)=>{
+                console.log("Save a new post");
+                next();
+        },save);
+
+        
 
 
 
-router.get('/id/:snippetId',getOneById)
-        .put(update)
-        .delete(deleteOneById)
-        .put(update);
+router.get('/id/:snippetId',getOneById);
+router.put('/id/:snippetId',((req,res,next)=>{
+                console.log("put method");
+                next();
+        }),update);
 
-router.get('/search/:search',getBySearchTerm)
+router.delete('/id/:snippetId',((req,res,next)=>{
+        console.log("deleteOneById");
+        next();
+}),deleteOneById);
+
+
+router.get('/search/:search',((req,res,next)=>{
+        console.log("search request");
+        next();
+}),getBySearchTerm)
 
 
 
