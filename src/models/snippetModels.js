@@ -91,6 +91,7 @@ class SnippetModel {
     };
 
     async update(params){
+        console.log(params.userId)
         return new Promise((resolve,reject)=>{
             pool.query("UPDATE `snippets` SET `title`=?, `keywords`=? ,`content`=? WHERE `id`=? and user=?;"
                 ,[params.title,params.keywords,params.content,parseInt(params.id),parseInt(params.userId)],(error,results)=>{

@@ -33,7 +33,7 @@ export const  authenticate = async (res,token) =>{
     let authenticatedUser = await jwt.verify(token, process.env.TOKEN_SECRET, async function(err, decoded) {
         if (err){
             console.log('auth Failed')
-            throw error;
+            throw err;
         }
         try{
             let result = await UserModel.getOneByAuthId(decoded.id);

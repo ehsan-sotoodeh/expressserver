@@ -11,10 +11,7 @@ import {
 const router = Router();
 
 
-router.get('/',((req,res,next)=>{
-                res = addCORSAccessControl(res);
-                next();
-        }),getAll)
+router.get('/',getAll)
         .post('/',(req,res,next)=>{
                 console.log("Save a new post");
                 next();
@@ -46,11 +43,7 @@ router.get('/search/:search',((req,res,next)=>{
 }),getBySearchTerm)
 
 
-function addCORSAccessControl(res){
-        res.set('Access-Control-Allow-Origin', 'http://localhost:3000')
-        res.set('Access-Control-Allow-Credentials', 'true')
-        return res;
-}
+
 
 module.exports = router;
 

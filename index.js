@@ -29,18 +29,22 @@ app.use(cors());
 
 
 // set up routes
-app.use('/snippets', (async (req,res,next)=>{
-    //req.cookies.auth_token = "0000"
-    try {
-        let user  = await authenticate(res,req.cookies.auth_token);
-        req.user = user
-    } catch (error) {
-        console.log(error)
-    }
-
-    next();
-
-}), snippetRoutes);
+app.use('/snippets',((req,res,next)=>{
+        // middle ware for CORS
+        res = addCORSAccessControl(res);
+        next();
+    }),
+    (async (req,res,next)=>{
+        //req.cookies.auth_token = "0000"
+        try {
+            let user  = await authenticate(res,req.cookies.auth_token);
+            req.user = user
+        } catch (error) {
+            console.log(error)
+        }
+        next();
+    })
+    , snippetRoutes);
 
 
 app.use('/auth', authRoutes);
@@ -65,6 +69,14 @@ const HomePageRoute = express();
 HomePageRoute.get('/',(req,res)=>{
     res.send(`<h1>Hello World</h1>`);
 });
+
+function addCORSAccessControl(res){
+    res.set('Access-Control-Allow-Origin', 'http://localhost:3000')
+    res.set('Access-Control-Allow-Credentials', 'true')
+    return res;
+}
+
+
 // HomePageRoute.listen(80,(req,res)=>{
 //     console.log(`Hello World`);
 // });
