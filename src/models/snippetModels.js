@@ -7,9 +7,10 @@ class SnippetModel {
     constructor(){
     }
 
-    async getAll(){
+    async getAll(userId){
+        
         return new Promise((resolve,reject) =>{
-            pool.query("select * from snippets where deleted_at IS NULL " ,(error,results)=>{
+            pool.query("select * from snippets where deleted_at IS NULL ORDER BY FIELD(user, ? ) DESC", userId ,(error,results)=>{
                 if(error){
                     console.log(error)
                     return reject(error);
@@ -33,7 +34,7 @@ class SnippetModel {
         });
     };
 
-    async getBySearchTerm(searchTerm,columnName="keywords"){
+    async getBySearchTerm(userId,searchTerm,columnName="keywords"){
         let searchTermArray = searchTerm.split(',');
         let query = "select * from snippets where deleted_at IS NULL AND ";
         let queryValues = [];
@@ -43,7 +44,8 @@ class SnippetModel {
             let andOr = (index > 0)? " Or " : "";
             wheres += `${andOr} ${columnName} LIKE ? `;
         });
-        console.log(query+wheres)
+        wheres += " ORDER BY FIELD(user, ? ) DESC ",
+        queryValues.push(parseInt(userId));
         return new Promise((resolve,reject) =>{
             let q = pool.query(query+wheres ,queryValues , (error,results)=>{
                 if(error){
@@ -54,14 +56,15 @@ class SnippetModel {
         });
     };
 
-    async deleteOneById(id){
+    async deleteOneById(snippetId,userId){
         return new Promise((resolve,reject) =>{
             
-            pool.query("UPDATE snippets SET deleted_at=? WHERE id = ?" ,[new Date(), parseInt(id)], (error,results)=>{
+            pool.query("UPDATE snippets SET deleted_at=? WHERE id = ? and user=?" ,[new Date(), parseInt(snippetId), parseInt(userId)], (error,results)=>{
                 if(error){
                     return reject(error); 
                 }
-                return resolve(id)
+                if(results.affectedRows > 0) return resolve(snippetId)
+                else return resolve(-1);
             });
         });
     };
@@ -69,7 +72,7 @@ class SnippetModel {
 
     async save(params){
         //TODO replace userId and private with real data
-       params.userId = 1;
+       //params.userId = 1;
        params.private = false;  
         return new Promise((resolve,reject)=>{
             pool.query("INSERT INTO `snippets`  VALUES (?,?,?,?,?,?,?,?);"
@@ -89,13 +92,18 @@ class SnippetModel {
 
     async update(params){
         return new Promise((resolve,reject)=>{
-            pool.query("UPDATE `snippets` SET `title`=?, `keywords`=? ,`content`=? WHERE `id`=?;",[params.title,params.keywords,params.content,parseInt(params.id)],(error,results)=>{
+            pool.query("UPDATE `snippets` SET `title`=?, `keywords`=? ,`content`=? WHERE `id`=? and user=?;"
+                ,[params.title,params.keywords,params.content,parseInt(params.id),parseInt(params.userId)],(error,results)=>{
                 if(error){
                     return reject(error);
                 }
-                
-                let updatedSnippet = this.getOneById(parseInt(params.id));
-                return resolve(updatedSnippet);
+                if(results.affectedRows > 0){
+                    let updatedSnippet = this.getOneById(parseInt(params.id));
+                    return resolve(updatedSnippet);
+
+                }
+                return reject("Unauthorized update request");
+
             });
         });
     };

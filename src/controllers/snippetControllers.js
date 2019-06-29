@@ -1,8 +1,13 @@
 import {SnippetModel} from '../models/snippetModels'
 
 export const getAll = async (req,res) =>{
+    if(!req.user){
+        res.send("Unauthorized Access!");
+        return;
+    }
+    req.query.userId = req.user.id
     try{
-        let snippets = await SnippetModel.getAll();
+        let snippets = await SnippetModel.getAll(req.user.id);
         res.json(snippets);
 
     }catch(error){
@@ -29,10 +34,15 @@ export const getOneById = async (req,res) =>{
 }
 
 export const getBySearchTerm = async (req,res) =>{
+    if(!req.user){
+        res.send("Unauthorized Access!");
+        return;
+    }
+    req.query.userId = req.user.id
     try{
-        let snippetsByKeyword = await SnippetModel.getBySearchTerm(req.params.search,'keywords');
-        let snippetsByTitle = await SnippetModel.getBySearchTerm(req.params.search,'title');
-        let snippetsByContent = await SnippetModel.getBySearchTerm(req.params.search,'content');
+        let snippetsByKeyword = await SnippetModel.getBySearchTerm(req.user.id,req.params.search,'keywords');
+        let snippetsByTitle = await SnippetModel.getBySearchTerm(req.user.id,req.params.search,'title');
+        let snippetsByContent = await SnippetModel.getBySearchTerm(req.user.id,req.params.search,'content');
         let snippets = [...snippetsByKeyword,...snippetsByTitle,...snippetsByContent];
         let uniqueSnippets = getUniqueByKey(snippets,'id');
         res.json(uniqueSnippets);
@@ -44,9 +54,13 @@ export const getBySearchTerm = async (req,res) =>{
 }
 
 export const deleteOneById = async (req,res) =>{
-    
+    if(!req.user){
+        res.send("Unauthorized Access!");
+        return;
+    }
+    req.query.userId = req.user.id
     try{
-        let snippets = await SnippetModel.deleteOneById(req.params.snippetId);
+        let snippets = await SnippetModel.deleteOneById(req.params.snippetId,req.user.id);
         res.json(snippets);
 
     }catch(error){
@@ -57,7 +71,12 @@ export const deleteOneById = async (req,res) =>{
 }
 
 export const save = async (req,res) =>{
-    console.log("here...")
+    if(!req.user){
+        res.send("Unauthorized Access!");
+        return;
+    }
+    req.query.userId = req.user.id
+
     try{
        let result = await SnippetModel.save(req.query);
        res.json(result);
@@ -67,7 +86,11 @@ export const save = async (req,res) =>{
     }
 }
 export const update = async (req,res) =>{
-
+    if(!req.user){
+        res.send("Unauthorized Access!");
+        return;
+    }
+    req.query.userId = req.user.id
     try{
        let result = await SnippetModel.update(req.query);
        res.json(result);

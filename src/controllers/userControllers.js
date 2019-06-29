@@ -37,7 +37,6 @@ export const  authenticate = async (res,token) =>{
         }
         try{
             let result = await UserModel.getOneByAuthId(decoded.id);
-            console.log(result)
             return result;
          }catch(error){
              throw error;

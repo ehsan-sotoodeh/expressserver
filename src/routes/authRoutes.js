@@ -1,9 +1,8 @@
 import  { Router } from "express";
 import passport from 'passport';
 import dotenv from 'dotenv';
-import { save,getOneByAuthId,updateToken } from '../controllers/userControllers'
-import jwt from 'jsonwebtoken';
 const passportSetup = require('../config/passport-setup');
+const GoogleStrategy = require('passport-google-oauth20');
 
 dotenv.config();
 
@@ -17,6 +16,7 @@ router.get('/google',passport.authenticate('google',{
 
 
 router.get('/google/redirect',passport.authenticate('google'),(req,res)=>{
+    res.cookie("auth_token", req.user.token);
     res.redirect('/')
 });
 

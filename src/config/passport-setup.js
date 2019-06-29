@@ -2,12 +2,17 @@ const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20');
 require('dotenv').config()
 let usersArray = [];
+import jwt from 'jsonwebtoken';
+import { save,getOneByAuthId,updateToken } from '../controllers/userControllers'
+
 
 passport.serializeUser((user,done)=>{
     done(null,user.id);
 });
 passport.deserializeUser((id,done)=>{
     //get user from db by id
+    console.log("0000");
+    alert();
     usersArray.map(user=>{
         if(user.id === id){
             done(null,user);
@@ -48,7 +53,8 @@ passport.use(
                     currentUserInDb = updateToken(profile.id, token)
                 }
                 currentUserInDb.then(res=>{
-                    console.log(res)
+                    //console.log(res)
+                    //add session to cookie
                     done(null,res); 
     
                 })
