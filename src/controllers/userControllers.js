@@ -1,6 +1,8 @@
 import {UserModel} from '../models/userModel'
 import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
+import CookieManager from '../config/CookieManager';
+
 import { resolve } from 'url';
 dotenv.config();
 
@@ -34,7 +36,8 @@ export const  authenticate = async (res,token) =>{
     if(!token) return;
     let authenticatedUser = await jwt.verify(token, process.env.TOKEN_SECRET, async function(err, decoded) {
         if (err){
-            console.log('auth Failed')
+            console.log('auth Failed');
+            CookieManager.clearUserCookies(res)
             throw err;
         }
         try{

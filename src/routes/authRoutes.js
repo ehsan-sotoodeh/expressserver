@@ -1,6 +1,7 @@
 import  { Router } from "express";
 import passport from 'passport';
 import dotenv from 'dotenv';
+import CookieManager from '../config/CookieManager';
 const passportSetup = require('../config/passport-setup');
 const GoogleStrategy = require('passport-google-oauth20');
 
@@ -16,19 +17,20 @@ router.get('/google',passport.authenticate('google',{
 
 
 router.get('/google/redirect',passport.authenticate('google'),(req,res)=>{
-    res.cookie("auth_token", req.user.token);
+    CookieManager.setUserCookies(res,req)
     res.redirect('/')
 });
 
 //auth logOut
 router.get('/logout',(req,res)=>{
     //haddle with passport
-    res.clearCookie("auth_token");
+    CookieManager.clearUserCookies(res)
 
 
     req.logout();
     res.redirect('/');
 });
+
 
 
 export default router;

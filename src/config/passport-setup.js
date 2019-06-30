@@ -10,9 +10,7 @@ passport.serializeUser((user,done)=>{
     done(null,user.id);
 });
 passport.deserializeUser((id,done)=>{
-    //get user from db by id
-    console.log("0000");
-    alert();
+
     usersArray.map(user=>{
         if(user.id === id){
             done(null,user);
