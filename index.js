@@ -9,6 +9,7 @@ require('dotenv').config()
 
 
 
+
 const app = express();
 const PORT = process.env.PORT_NUMBER;
 
@@ -51,8 +52,8 @@ app.use('/snippets',((req,res,next)=>{
 
 app.use('/auth', authRoutes);
 app.get('/test', async (req,res)=>{
-    let user  = await authenticate(res,req.query['token']);
-    res.send(user)
+    res.send('<script type="text/javascript">window.location = "http://localhost:3000";</script>');
+    //res.render('redirect');
 });
 
 

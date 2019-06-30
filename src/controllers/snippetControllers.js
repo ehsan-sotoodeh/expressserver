@@ -91,7 +91,7 @@ export const update = async (req,res) =>{
         userId = req.user.id;
 
     try{
-       let result = await SnippetModel.update(userId,eq.query);
+       let result = await SnippetModel.update(userId,req.query);
        res.json(result);
     }catch(error){
         console.error(error);

@@ -18,7 +18,8 @@ router.get('/google',passport.authenticate('google',{
 
 router.get('/google/redirect',passport.authenticate('google'),(req,res)=>{
     CookieManager.setUserCookies(res,req)
-    res.redirect('/')
+    //res.send('<script type="text/javascript">window.location = "http://localhost:3000";</script>');
+    res.send('<script type="text/javascript">window.close();</script>');
 });
 
 //auth logOut
@@ -28,7 +29,7 @@ router.get('/logout',(req,res)=>{
 
 
     req.logout();
-    res.redirect('/');
+    res.send('<script type="text/javascript">window.location = "http://localhost:3000";</script>');
 });
 
 
