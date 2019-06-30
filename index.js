@@ -38,11 +38,13 @@ app.use('/snippets',((req,res,next)=>{
         //req.cookies.auth_token = "0000"
         try {
             let user  = await authenticate(res,req.cookies.auth_token);
-            req.user = user
+            req.user = user;
+            next();
         } catch (error) {
-            console.log(error)
+            console.log(error);
+            req.user = undefined;
+            next();
         }
-        next();
     })
     , snippetRoutes);
 

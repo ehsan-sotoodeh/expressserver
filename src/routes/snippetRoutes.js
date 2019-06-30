@@ -13,7 +13,6 @@ const router = Router();
 
 router.get('/',getAll)
         .post('/',(req,res,next)=>{
-                console.log("Save a new post");
                 next();
         },save);
 
@@ -22,23 +21,18 @@ router.get('/',getAll)
 
 
 router.get('/id/:snippetId',((req,res,next)=>{
-                 console.log(req.cookies)
-                 console.log(req.headers)
                 next();
         }),getOneById);
 router.put('/id/:snippetId',((req,res,next)=>{
-                console.log("put method");
                 next();
         }),update);
 
 router.delete('/id/:snippetId',((req,res,next)=>{
-        console.log("deleteOneById");
         next();
 }),deleteOneById);
 
 
 router.get('/search/:search',((req,res,next)=>{
-        console.log("search request");
         next();
 }),getBySearchTerm)
 

@@ -23,6 +23,9 @@ router.get('/google/redirect',passport.authenticate('google'),(req,res)=>{
 //auth logOut
 router.get('/logout',(req,res)=>{
     //haddle with passport
+    res.clearCookie("auth_token");
+
+
     req.logout();
     res.redirect('/');
 });

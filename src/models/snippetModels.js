@@ -8,11 +8,10 @@ class SnippetModel {
     }
 
     async getAll(userId){
-        
+
         return new Promise((resolve,reject) =>{
             pool.query("select * from snippets where deleted_at IS NULL ORDER BY FIELD(user, ? ) DESC", userId ,(error,results)=>{
                 if(error){
-                    console.log(error)
                     return reject(error);
                 }
                 return resolve(results)
@@ -70,13 +69,12 @@ class SnippetModel {
     };
 
 
-    async save(params){
-        //TODO replace userId and private with real data
-       //params.userId = 1;
+    async save(userId,params){
+        //TODO replace private with real data
        params.private = false;  
         return new Promise((resolve,reject)=>{
             pool.query("INSERT INTO `snippets`  VALUES (?,?,?,?,?,?,?,?);"
-                ,[null,params.title,params.keywords,params.content,params.userId,params.private,null,null],(error,results)=>{
+                ,[null,params.title,params.keywords,params.content,userId,params.private,null,null],(error,results)=>{
                 if(error){
                     return reject(error);
                 }
@@ -90,11 +88,10 @@ class SnippetModel {
         });
     };
 
-    async update(params){
-        console.log(params.userId)
+    async update(userId,params){
         return new Promise((resolve,reject)=>{
             pool.query("UPDATE `snippets` SET `title`=?, `keywords`=? ,`content`=? WHERE `id`=? and user=?;"
-                ,[params.title,params.keywords,params.content,parseInt(params.id),parseInt(params.userId)],(error,results)=>{
+                ,[params.title,params.keywords,params.content,parseInt(params.id),parseInt(userId)],(error,results)=>{
                 if(error){
                     return reject(error);
                 }
