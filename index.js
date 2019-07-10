@@ -3,7 +3,8 @@ import passport from 'passport'
 import bodyParser from 'body-parser';
 import cookieParser  from 'cookie-parser';
 import authRoutes  from './src/routes/authRoutes'
-const snippetRoutes = require('./src/routes/snippetRoutes')
+import bookmarkRoutes  from './src/routes/bookmarkRoutes'
+const snippetRoutes = require('./src/routes/snippetRoutes') //TODO fix this
 import { authenticate } from './src/controllers/userControllers'
 require('dotenv').config()
 
@@ -33,12 +34,19 @@ app.use(cors());
 app.use('/snippets',((req,res,next)=>{
         // middle ware for CORS
         res = addCORSAccessControl(res);
+        //console.log(res)
+
         next();
     }),
     (async (req,res,next)=>{
         //req.cookies.auth_token = "0000"
+        console.log(req.cookies.auth_token)
+
         try {
             let user  = await authenticate(res,req.cookies.auth_token);
+            console.log("----------------------------")
+            console.log(user)
+
             req.user = user;
             next();
         } catch (error) {
@@ -51,6 +59,36 @@ app.use('/snippets',((req,res,next)=>{
 
 
 app.use('/auth', authRoutes);
+
+
+app.use('/bookmark',
+
+        ((req,res,next)=>{
+            // middle ware for CORS
+            res = addCORSAccessControl(res);
+            //console.log(res)
+
+            next();
+        }),
+
+        (async (req,res,next)=>{
+            //req.cookies.auth_token = "0000"
+            try {
+                let user  = await authenticate(res,req.cookies.auth_token);
+                req.user = user;
+                next();
+            } catch (error) {
+                req.user = undefined;
+                next();
+            }
+        })
+
+        , bookmarkRoutes);
+
+
+
+
+
 app.get('/test', async (req,res)=>{
     res.send('<script type="text/javascript">window.location = "http://localhost:3000";</script>');
     //res.render('redirect');

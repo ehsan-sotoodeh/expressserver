@@ -28,6 +28,7 @@ class UserModel {
         return new Promise((resolve,reject) =>{
             pool.query("select * from users where auth_id = ? " ,[auth_id], (error,results)=>{
                 if(error){
+                    console.log(error)
                     return reject(error);
                 }
                 if(results.length > 0){

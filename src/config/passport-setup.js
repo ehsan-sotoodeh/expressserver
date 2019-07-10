@@ -32,6 +32,7 @@ passport.use(
         //console.log(profile)
         //made sure you have recorded user's information in Db
         //... if you havn't then do it here.
+
         let token = jwt.sign({ id: profile.id }, process.env.TOKEN_SECRET, {
             expiresIn: process.env.TOKEN_DURATION  // expires in 24 hours
           });
@@ -43,8 +44,10 @@ passport.use(
             token : token,
         };
         try {
+
             let currentUserInDb = getOneByAuthId(profile.id);
             currentUserInDb.then(res=>{
+
                 if(res == null){
                     currentUserInDb = save(newUser);
                 }else{

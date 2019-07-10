@@ -11,7 +11,9 @@ dotenv.config();
 const router = Router();
 
 //google+ login
-router.get('/google',passport.authenticate('google',{
+router.get('/google',(req,res,next)=>{
+    next();
+},passport.authenticate('google',{
     scope:['profile']
 }));
 
