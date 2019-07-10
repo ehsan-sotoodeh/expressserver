@@ -21,8 +21,7 @@ class SnippetModel {
 
     async getMySnippets(userId){
         return new Promise((resolve,reject) =>{
-            console.log("getMySnippets(userId)")
-            pool.query("select snippets.id, snippets.title, snippets.keywords, snippets.content, snippets.user, snippets.private, snippets.created_at, snippets.deleted_at, bookmarks.id as bookmarkId, bookmarks.snippetId from snippets LEFT JOIN bookmarks On snippets.id = bookmarks.snippetId  where snippets.deleted_at and snippets.user = ?", userId ,(error,results)=>{
+            pool.query("select snippets.id, snippets.title, snippets.keywords, snippets.content, snippets.user, snippets.private, snippets.created_at, snippets.deleted_at, bookmarks.id as bookmarkId, bookmarks.snippetId from snippets LEFT JOIN bookmarks On snippets.id = bookmarks.snippetId  where snippets.deleted_at IS NULL and (snippets.user = ? or  bookmarks.userId = ?) ", [userId,userId] ,(error,results)=>{
                 if(error){
                     console.log(error)
                     return reject(error);

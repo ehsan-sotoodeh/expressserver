@@ -37,7 +37,7 @@ router.get('/search/:search',((req,res,next)=>{
         next();
 }),getBySearchTerm)
 
-router.get('/mySnippets/',((req,res,next)=>{
+router.get('/mySnippets',((req,res,next)=>{
         next();
 }),getMySnippets)
 
