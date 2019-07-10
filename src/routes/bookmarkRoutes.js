@@ -1,7 +1,7 @@
 import  { Router } from "express";
 
 import {
-    bookmarkOne
+    bookmark,unBookmark
 } from '../controllers/bookmarkControllers'
 const router = Router();
 
@@ -9,9 +9,14 @@ const router = Router();
 
 
 
-router.post('/snippetId/:snippetId/userId/:userId',((req,res,next)=>{
+router
+        .post('/snippetId/:snippetId/userId/:userId',((req,res,next)=>{
                 next();
-        }),bookmarkOne);
+        }),bookmark)
+        .delete('/snippetId/:snippetId/userId/:userId',((req,res,next)=>{
+                next();
+        }),unBookmark)
+
 
 
 // router.delete('/id/:snippetId',((req,res,next)=>{

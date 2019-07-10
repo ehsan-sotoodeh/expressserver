@@ -8,7 +8,7 @@ class BookmarkModel {
     }
 
     
-    async bookmarkOne(userId,snippetId){
+    async bookmark(userId,snippetId){
         return new Promise(async (resolve,reject)=>{
             //check if sippet is already bookmarked
             let isBookmarked = await this.isBookmarked(userId, snippetId);
@@ -28,11 +28,26 @@ class BookmarkModel {
         });
     };
 
+    async unBookmark(userId,snippetId){
+        return new Promise(async (resolve,reject)=>{
+            //check if sippet is already bookmarked
+            pool.query("DELETE FROM `bookmarks` WHERE `snippetId` = ? and `userId` = ? ",
+                [snippetId,userId],
+                (error,results)=>{
+                if(error){
+                    return reject(error);
+                }
+
+                return resolve("unBookmarked");
+            });
+        });
+    };
+
     async isBookmarked(userId,snippetId){
         return new Promise((resolve,reject)=>{
             //check if sippet is already bookmarked
             pool.query("SELECT * from `bookmarks`  WHERE snippetId = ? and userId = ?",
-                [parseInt(snippetId),parseInt(userId)],
+                [snippetId,userId],
                 (error,results)=>{
                 if(error){
                     return reject(error);
@@ -47,6 +62,8 @@ class BookmarkModel {
 
         });
     };
+
+
 
 
     // async getOneByAuthId(auth_id){
