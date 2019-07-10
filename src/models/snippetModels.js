@@ -8,6 +8,17 @@ class SnippetModel {
     }
 
     async getAll(userId){
+        return new Promise((resolve,reject) =>{
+            pool.query("select snippets.id, snippets.title, snippets.keywords, snippets.content, snippets.user, snippets.private, snippets.created_at, snippets.deleted_at, bookmarks.id as bookmarkId, bookmarks.snippetId from snippets LEFT JOIN bookmarks On snippets.id = bookmarks.snippetId  where snippets.deleted_at IS NULL ORDER BY FIELD(snippets.user, ? ) DESC", userId ,(error,results)=>{
+                if(error){
+                    console.log(error)
+                    return reject(error);
+                }
+                return resolve(results)
+            });
+        });
+    };
+    async getAll2(userId){
 
         return new Promise((resolve,reject) =>{
             pool.query("select * from snippets where deleted_at IS NULL ORDER BY FIELD(user, ? ) DESC", userId ,(error,results)=>{
