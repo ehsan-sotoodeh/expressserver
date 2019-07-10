@@ -39,14 +39,8 @@ app.use('/snippets',((req,res,next)=>{
         next();
     }),
     (async (req,res,next)=>{
-        //req.cookies.auth_token = "0000"
-        console.log(req.cookies.auth_token)
-
         try {
             let user  = await authenticate(res,req.cookies.auth_token);
-            console.log("----------------------------")
-            console.log(user)
-
             req.user = user;
             next();
         } catch (error) {

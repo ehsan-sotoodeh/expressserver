@@ -2,6 +2,7 @@ import  { Router } from "express";
 
 import {
     getAll,
+    getMySnippets,
     save,
     update,
     getOneById,
@@ -35,6 +36,10 @@ router.delete('/id/:snippetId',((req,res,next)=>{
 router.get('/search/:search',((req,res,next)=>{
         next();
 }),getBySearchTerm)
+
+router.get('/mySnippets/',((req,res,next)=>{
+        next();
+}),getMySnippets)
 
 
 

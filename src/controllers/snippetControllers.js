@@ -14,6 +14,20 @@ export const getAll = async (req,res) =>{
 
     }
 }
+export const getMySnippets = async (req,res) =>{
+    let userId = -1;
+    if(req.user) 
+        userId = req.user.id;
+    
+    try{
+        let snippets = await SnippetModel.getMySnippets(userId);
+        res.json(snippets);
+
+    }catch(error){
+        res.sendStatus(500);
+
+    }
+}
 
 export const getOneById = async (req,res) =>{
 
