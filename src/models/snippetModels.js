@@ -31,17 +31,6 @@ class SnippetModel {
         });
     };
 
-    async getAll2(userId){
-
-        return new Promise((resolve,reject) =>{
-            pool.query("select * from snippets where deleted_at IS NULL ORDER BY FIELD(user, ? ) DESC", userId ,(error,results)=>{
-                if(error){
-                    return reject(error);
-                }
-                return resolve(results)
-            });
-        });
-    };
 
     async getOneById(id){
         return new Promise((resolve,reject) =>{
@@ -57,7 +46,33 @@ class SnippetModel {
         });
     };
 
+    
     async getBySearchTerm(userId,searchTerm,columnName="keywords"){
+        let searchTermArray = searchTerm.split(',');
+        let query = "select snippets.id, snippets.title, snippets.keywords, snippets.content, snippets.user, snippets.private, snippets.created_at, snippets.deleted_at, bookmarks.id as bookmarkId, bookmarks.snippetId from snippets LEFT JOIN bookmarks On snippets.id = bookmarks.snippetId where deleted_at IS NULL AND ";
+        let queryValues = [];
+        let wheres = ""
+        searchTermArray.map((term,index) =>{
+            queryValues.push(`%${term}%`);
+            let andOr = (index > 0)? " Or " : "";
+            wheres += `${andOr} ${columnName} LIKE ? `;
+        });
+        wheres += " ORDER BY FIELD(user, ? ) DESC, bookmarks.id DESC ",
+        queryValues.push(parseInt(userId));
+        return new Promise((resolve,reject) =>{
+            let q = pool.query(query+wheres ,queryValues , (error,results)=>{
+                if(error){
+                    return reject(error);
+                }
+                return resolve(results)
+            });
+        });
+    };
+
+
+
+
+    async getBySearchTerm2(userId,searchTerm,columnName="keywords"){
         let searchTermArray = searchTerm.split(',');
         let query = "select * from snippets where deleted_at IS NULL AND ";
         let queryValues = [];
@@ -78,6 +93,8 @@ class SnippetModel {
             });
         });
     };
+
+
 
     async deleteOneById(snippetId,userId){
         return new Promise((resolve,reject) =>{
