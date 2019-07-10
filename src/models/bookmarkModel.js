@@ -9,7 +9,13 @@ class BookmarkModel {
 
     
     async bookmarkOne(userId,snippetId){
-        return new Promise((resolve,reject)=>{
+        return new Promise(async (resolve,reject)=>{
+            //check if sippet is already bookmarked
+            let isBookmarked = await this.isBookmarked(userId, snippetId);
+
+            if(isBookmarked)
+                return resolve("already bookmarked");
+
             pool.query("INSERT INTO `bookmarks`  VALUES (?,?, ?);",
                 [null,snippetId,userId],
                 (error,results)=>{
@@ -17,8 +23,28 @@ class BookmarkModel {
                     return reject(error);
                 }
 
-                return resolve(results);
+                return resolve("bookmarked");
             });
+        });
+    };
+
+    async isBookmarked(userId,snippetId){
+        return new Promise((resolve,reject)=>{
+            //check if sippet is already bookmarked
+            pool.query("SELECT * from `bookmarks`  WHERE snippetId = ? and userId = ?",
+                [parseInt(snippetId),parseInt(userId)],
+                (error,results)=>{
+                if(error){
+                    return reject(error);
+                }
+                // is already bookmarked
+                if(results.length > 0)
+                    return resolve(true);
+                
+                // not bookmarked yet
+                return resolve(false);
+            });
+
         });
     };
 
