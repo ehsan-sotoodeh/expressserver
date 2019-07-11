@@ -34,7 +34,7 @@ class SnippetModel {
 
     async getOneById(id){
         return new Promise((resolve,reject) =>{
-            pool.query("select * from snippets where id=? and deleted_at IS NULL " ,parseInt(id), (error,results)=>{
+            pool.query("select snippets.id, snippets.title, snippets.keywords, snippets.content, snippets.user, snippets.private, snippets.created_at, snippets.deleted_at, bookmarks.id as bookmarkId, bookmarks.snippetId from snippets LEFT JOIN bookmarks On snippets.id = bookmarks.snippetId where snippets.id=? and deleted_at IS NULL " ,parseInt(id), (error,results)=>{
                 if(error){
                     return reject(error);
                 }

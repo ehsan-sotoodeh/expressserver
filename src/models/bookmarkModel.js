@@ -1,6 +1,7 @@
 import { resolve } from 'path';
 import { rejects } from 'assert';
 require('dotenv').config()
+import {SnippetModel} from '../models/snippetModels'
 
 const mysql = require('mysql');
 class BookmarkModel {
@@ -13,17 +14,21 @@ class BookmarkModel {
             //check if sippet is already bookmarked
             let isBookmarked = await this.isBookmarked(userId, snippetId);
 
-            if(isBookmarked)
-                return resolve("already bookmarked");
+            if(isBookmarked){
+                const response = {"result" : "false",'message' :"already bookmarked" }
+                return resolve(response);
+                
+            }
 
             pool.query("INSERT INTO `bookmarks`  VALUES (?,?, ?);",
                 [null,snippetId,userId],
-                (error,results)=>{
+                async (error,results)=>{
                 if(error){
                     return reject(error);
                 }
-
-                return resolve("bookmarked");
+                let snippet = await SnippetModel.getOneById(snippetId);
+                const response = {"result" : "true",'payload' :snippet }
+                return resolve(response);
             });
         });
     };
@@ -33,12 +38,14 @@ class BookmarkModel {
             //check if sippet is already bookmarked
             pool.query("DELETE FROM `bookmarks` WHERE `snippetId` = ? and `userId` = ? ",
                 [snippetId,userId],
-                (error,results)=>{
+                async (error,results)=>{
                 if(error){
                     return reject(error);
                 }
 
-                return resolve("unBookmarked");
+                let snippet = await SnippetModel.getOneById(snippetId);
+                const response = {"result" : "true",'payload' :snippet }
+                return resolve(response);
             });
         });
     };
