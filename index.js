@@ -4,6 +4,7 @@ import bodyParser from 'body-parser';
 import cookieParser  from 'cookie-parser';
 import authRoutes  from './src/routes/authRoutes'
 import bookmarkRoutes  from './src/routes/bookmarkRoutes'
+import collectionRoutes  from './src/routes/collectionRoutes'
 const snippetRoutes = require('./src/routes/snippetRoutes') //TODO fix this
 import { authenticate } from './src/controllers/userControllers'
 require('dotenv').config()
@@ -53,6 +54,7 @@ app.use('/snippets',((req,res,next)=>{
 
 
 app.use('/auth', authRoutes);
+app.use('/collection', collectionRoutes);
 
 
 app.use('/bookmark',

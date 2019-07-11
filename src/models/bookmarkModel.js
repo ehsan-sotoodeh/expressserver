@@ -15,7 +15,7 @@ class BookmarkModel {
             let isBookmarked = await this.isBookmarked(userId, snippetId);
 
             if(isBookmarked){
-                const response = {"result" : "false",'message' :"already bookmarked" }
+                const response = {"result" : false,'message' :"already bookmarked" }
                 return resolve(response);
                 
             }
@@ -27,7 +27,7 @@ class BookmarkModel {
                     return reject(error);
                 }
                 let snippet = await SnippetModel.getOneById(snippetId);
-                const response = {"result" : "true",'payload' :snippet }
+                const response = {"result" : true,'payload' :snippet }
                 return resolve(response);
             });
         });
@@ -44,7 +44,7 @@ class BookmarkModel {
                 }
 
                 let snippet = await SnippetModel.getOneById(snippetId);
-                const response = {"result" : "true",'payload' :snippet }
+                const response = {"result" : true,'payload' :snippet }
                 return resolve(response);
             });
         });
