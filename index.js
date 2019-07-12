@@ -54,7 +54,15 @@ app.use('/snippets',((req,res,next)=>{
 
 
 app.use('/auth', authRoutes);
-app.use('/collection', collectionRoutes);
+app.use('/collection', 
+        ((req,res,next)=>{
+            // middle ware for CORS
+            res = addCORSAccessControl(res);
+            //console.log(res)
+
+            next();
+        }),
+        collectionRoutes);
 
 
 app.use('/bookmark',

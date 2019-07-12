@@ -11,7 +11,7 @@ class CollectionModel {
     
     async getCollection(userId,snippetId){
         return new Promise(async (resolve,reject)=>{
-            pool.query("select keywords from snippets",
+            pool.query("select keywords from snippets where snippets.deleted_at IS NULL",
                 async (error,results)=>{
                 if(error){
                     return reject(error);
@@ -29,8 +29,9 @@ class CollectionModel {
                         }
                     });
                 });
+                const response = {"result" : true, "payload": collection}
 
-                return resolve(collection);
+                return resolve(response);
             });
         });
     };
